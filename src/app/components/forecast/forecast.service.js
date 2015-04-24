@@ -1,44 +1,56 @@
 'use strict';
 
 angular.module('weather')
-  .factory('wunderground', function() {
-    var shinyNewServiceInstance;
-  // factory function body that constructs shinyNewServiceInstance
-  return shinyNewServiceInstance;
-  });
+  .factory('wunderground', ['$http', '$q', function($http, $q) {
 
+    var weather = {
 
+      wundEndpoint: 'http://api.wunderground.com/api/',
+      forecastData: {},
 
-//http://api.wunderground.com/api/Your_Key/forecast10day/q
+      getForecast: function(userInput) {
 
-//var getWundergroundData = function (query) {
-//    $.ajax({
-//        url: "http://api.wunderground.com/api/a39ce963b264009b/geolookup/forecast10day/q/" + query + ".json",
-//        dataType: "jsonp",
-//        success: function(data) {
-//            console.log(data);
-//            parseWuData(data);
-//            var location = data.location.lat + "," + data.location.lon;
-//            getForcastApiData(location);
-//            getHamWeatherData(location);
-//            //getBackground(locationImg);
-//        },
-//        error: function() {
-//            //Create Error Handler
-//
-//        }
-//    });
-//}
-//
-//
-//var parseWuData = function(callback) {
-//    console.log(callback);
-//    var forecastArray = callback.forecast.simpleforecast.forecastday;
-//    for (x = 0; j=forecastArray.length, x<j; x++) {
-//        wuDataHighs.push(parseInt(forecastArray[x].high.fahrenheit));
-//        wuDataLows.push(parseInt(forecastArray[x].low.fahrenheit));
-//        iconUrls.push(callback.forecast.simpleforecast.forecastday[x].icon_url);
-//    }
-//    wuDataHighs = wuDataHighs.map(Number);
-//    wuDataLows = wuDataLows.map(Number);
-//}
+        var deferred = $q.defer();
+
+        var req = $http.get("http://api.aerisapi.com/forecasts/"+ userInput +"?&client_id=6dC6rxKzfhRryQAf3pdKb&client_secret=BK8JefbKY4sWeANiJzNkfIBIrp5PltTtnQMVl2Pm");
+
+        req.success(function(data) {
+          var weatherData = data;
+
+          deferred.resolve(data);
+
+          var coordinates = [data.response[0].loc.long, data.response[0].loc.lat];
+          var string = coordinates.join();
+
+          console.log(string);
+
+          weather.parseData(data);
+          weather.getLocationData(string);
+        });
+        return deferred.promise;
+      },
+
+      getLocationData: function(coordinates){
+        console.log(coordinates);
+
+        var deferred = $q.defer();
+
+        var req = $http.jsonp("http://api.aerisapi.com/forecasts/closest?p=" + coordinates + "&limit=7&client_id=6dC6rxKzfhRryQAf3pdKb&client_secret=BK8JefbKY4sWeANiJzNkfIBIrp5PltTtnQMVl2Pm");
+
+        req.success(function(data) {
+          console.log(data);
+
+          deferred.resolve(data);
+        });
+        return deferred.promise;
+      },
+
+      parseData: function(data){
+        console.log(data);
+        weather.forecastData = data.response[0].periods;
+      }
+    };
+    return weather;
+
+  }]);
+

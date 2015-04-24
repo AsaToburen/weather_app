@@ -2,12 +2,12 @@
     <div class="jumbotron text-center">
         <div class="container">
             <h2>Find your local forecast</h2>
-            <form class="form-inline" ng-submit="getForecast()" role="form">
+            <form class="form-inline" name="locationForm" ng-submit="getForecast(userInput)" role="form">
                 <div class="form-group">
-                    <label for="email">Location: </label>
-                    <input type="location" class="form-control" id="location">
+                    <label for="location">Location: </label>
+                    <input type="location"  ng-model="userInput" class="form-control" id="location">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" id="submit" value="Submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>

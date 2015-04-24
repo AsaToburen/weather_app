@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('weather')
-  .controller('ForecastCtrl', function($scope){
-  $scope.forecast = 0;
-});
+.config(function($httpProvider) {
+  $httpProvider.defaults.useXDomain = true;
+})
+  .controller('ForecastCtrl', ['$scope', 'wunderground', function($scope, wunderground){
+  $scope.Forecast = wunderground.forecastData;
+}]);
