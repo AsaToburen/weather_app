@@ -12,18 +12,14 @@ angular.module('weather')
 
         var deferred = $q.defer();
 
-        var req = $http.get("http://api.aerisapi.com/forecasts/" + userInput + "?fields=periods.timestamp,periods.minTempF,periods.weather,periods.icon,periods.maxTempF,loc.lat,loc.long,&limit=10&client_id=6dC6rxKzfhRryQAf3pdKb&client_secret=BK8JefbKY4sWeANiJzNkfIBIrp5PltTtnQMVl2Pm");
+        var req = $http.get('http://api.aerisapi.com/forecasts/' + userInput + '?fields=periods.timestamp,periods.minTempF,periods.weather,periods.icon,periods.maxTempF,loc.lat,loc.long,&limit=10&client_id=6dC6rxKzfhRryQAf3pdKb&client_secret=BK8JefbKY4sWeANiJzNkfIBIrp5PltTtnQMVl2Pm');
 
         req.success(function(data) {
-          var weatherData = data;
-          console.log(data);
 
           deferred.resolve(data);
 
           var coordinates = [data.response[0].loc.long, data.response[0].loc.lat];
           var string = coordinates.join();
-
-          console.log(string);
 
           weather.parseData(data);
           weather.getLocationData(string);
@@ -32,14 +28,12 @@ angular.module('weather')
       },
 
       getLocationData: function(coordinates) {
-        console.log(coordinates);
 
         var deferred = $q.defer();
 
-        var req = $http.get("http://api.aerisapi.com/forecasts/closest?p=" + coordinates + "&client_id=6dC6rxKzfhRryQAf3pdKb&client_secret=BK8JefbKY4sWeANiJzNkfIBIrp5PltTtnQMVl2Pm");
+        var req = $http.get('http://api.aerisapi.com/forecasts/closest?p=' + coordinates + '&client_id=6dC6rxKzfhRryQAf3pdKb&client_secret=BK8JefbKY4sWeANiJzNkfIBIrp5PltTtnQMVl2Pm');
 
         req.success(function(data) {
-          console.log(data);
 
           deferred.resolve(data);
         });
@@ -47,7 +41,6 @@ angular.module('weather')
       },
 
       parseData: function(data) {
-        console.log(data);
         weather.forecastData = data.response[0].periods;
       }
     };

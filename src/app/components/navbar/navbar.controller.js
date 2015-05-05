@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('weather')
-  .controller('NavbarCtrl', ['$scope', 'wunderground', function($scope, wunderground) {
+  .controller('NavbarCtrl', ['$scope', function($scope) {
     $scope.date = new Date();
 
     
